@@ -1,0 +1,20 @@
+# Gradle
+.gradle/
+build/
+app/build/
+local.properties
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 构建产物
+*.apk
+*.aab
+*.ap_
+out/

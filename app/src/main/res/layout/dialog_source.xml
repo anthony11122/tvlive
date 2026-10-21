@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="名称（可留空）"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#777777"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/et_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="源地址"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#777777"
+        android:inputType="textUri"
+        android:maxLines="3" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="支持 m3u / m3u8 和 txt 格式。txt 用「频道名,地址」每行一个，分组写「分组名,#genre#」。"
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
+</LinearLayout>
