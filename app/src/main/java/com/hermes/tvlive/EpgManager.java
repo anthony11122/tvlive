@@ -129,7 +129,7 @@ public class EpgManager {
     // ---------- 查询 ----------
 
     public Programme current(String channelKey) {
-        List<Programme> list = byChannel.get(PlaylistParser.normName(channelKey));
+        List<Programme> list = lookup(channelKey);
         if (list == null) return null;
         long now = System.currentTimeMillis();
         for (Programme p : list) {
@@ -139,13 +139,26 @@ public class EpgManager {
     }
 
     public Programme next(String channelKey) {
-        List<Programme> list = byChannel.get(PlaylistParser.normName(channelKey));
+        List<Programme> list = lookup(channelKey);
         if (list == null) return null;
         long now = System.currentTimeMillis();
         for (Programme p : list) {
             if (p.start > now) return p;
         }
         return null;
+    }
+
+    /**
+     * EPG 里通常没有 4K 频道的独立节目单，回落到同名的非 4K 频道。
+     * 例如 湖南卫视4K -> 湖南卫视，节目内容是同一套。
+     */
+    private List<Programme> lookup(String channelKey) {
+        String key = PlaylistParser.normName(channelKey);
+        List<Programme> list = byChannel.get(key);
+        if (list == null && key.endsWith("4K")) {
+            list = byChannel.get(key.substring(0, key.length() - 2));
+        }
+        return list;
     }
 
     /** 面板里显示用：当前节目名，没有就返回空串 */
