@@ -20,11 +20,14 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
 
+        <!-- 打开即播放，没有列表首页 -->
         <activity
-            android:name=".MainActivity"
+            android:name=".PlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Player">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,11 +36,10 @@
         </activity>
 
         <activity
-            android:name=".PlayerActivity"
+            android:name=".SettingsActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode"
             android:exported="false"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.Player" />
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

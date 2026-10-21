@@ -118,6 +118,38 @@ public final class PlaylistParser {
         return s.isEmpty() ? n.trim() : s;
     }
 
+    /**
+     * EPG 匹配用的频道 key：CCTV-1高清 - 单播 -> CCTV1，SCTV-2高清 -> SCTV2，
+     * 湖南卫视高清 -> 湖南卫视。和 Python 版构建脚本保持同一套规则。
+     */
+    public static String normName(String raw) {
+        if (raw == null) return "";
+        String n = raw.trim();
+        n = n.replaceAll("^[★☆◆●■▲·\\s]+", "");
+        n = n.replaceAll("(?i)\\s*[-–—]\\s*(单播|组播|备用|测试|移动|电信|联通|ipv6)\\s*$", "");
+        n = n.replaceAll("(?i)[（(](50P|25P|未标注|备用|高清|超清|标清|流畅|\\d{3,4}[pi]|[pi])[）)]", "");
+        n = n.replaceAll("\\s+", "");
+
+        // 独立的 CCTV-4K 超高清频道
+        if (n.matches("(?i)^cctv[-_ ]?4k$")) return "CCTV4K";
+
+        n = n.replaceAll("(?i)4k", "·4K");
+        java.util.regex.Matcher m =
+                java.util.regex.Pattern.compile("(?i)^cctv[-_ ]?(\\d+)(\\+|plus)?(·4K)?(.*)$").matcher(n);
+        if (m.find()) {
+            String num = m.group(1);
+            String plus = m.group(2);
+            String fourK = m.group(3);
+            if (fourK != null) return "CCTV" + num;
+            return "CCTV" + num + (plus != null ? "+" : "");
+        }
+        n = n.replace("·", "");
+        n = n.replaceAll("(?i)^cgtn[-_ ]?", "CGTN");
+        n = n.replaceAll("(?i)(高清|超清|蓝光|标清|流畅|HD|SD|FHD)$", "");
+        n = n.replaceAll("^([A-Za-z]+)-(\\d+)$", "$1$2");
+        return n;
+    }
+
     static boolean isUrl(String s) {
         if (s == null) return false;
         String l = s.toLowerCase();
