@@ -24,8 +24,21 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      # ubuntu-latest 自带 Android SDK；setup-android@v3 在该镜像上会失败，改为直接用预装 SDK
+      - name: Configure Android SDK
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
+          echo "SDK 路径: $SDK"
+          ls "$SDK" || true
+          SDKMGR="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          if [ -x "$SDKMGR" ]; then
+            yes | "$SDKMGR" --licenses > /dev/null 2>&1 || true
+            "$SDKMGR" "platforms;android-35" "build-tools;35.0.0" "platform-tools" || true
+          else
+            echo "sdkmanager 不在预期路径，使用 runner 预装组件"
+          fi
 
       - name: Cache Gradle
         uses: actions/cache@v4
